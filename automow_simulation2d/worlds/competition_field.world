@@ -1,0 +1,25 @@
+include "moe.inc"
+include "obstacles.inc"
+
+# Set the resolution of the simulation in meters
+resolution 0.02
+
+# Set the simulation time step interval in milliseconds
+interval_sim 100
+
+# configure the GUI window
+window (
+  size [ 683.000 713.000 ] 
+  
+  center [ -0.061 -0.975 ] 
+  rotate [ 0 0 ]
+  scale 33.591 
+  
+  show_data 1
+  show_flags 0
+)
+
+# Insert the robot and obstacles
+moe ( pose[ 2.0 2.0 0.0 0.0 ] )
+flower_bed ( pose[ 6.0 6.0 0.0 0.0 ] )
+fence ( pose[ 0.0 0.0 0.0 0.0 ] )

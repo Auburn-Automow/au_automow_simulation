@@ -1,0 +1,6 @@
+<launch>
+  <node name="stageros" pkg="stage" 
+        type="stageros" output="screen" 
+        args="$(find automow_simluation2d)/worlds/competition_field.world"
+  />
+</launch>

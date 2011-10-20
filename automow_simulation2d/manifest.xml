@@ -1,0 +1,15 @@
+<package>
+  <description brief="automow_simulation2d">
+
+     automow_simulation2d
+
+  </description>
+  <author>William Woodall</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/automow_simulation2d</url>
+  <depend package="stage"/>
+
+</package>
+
+
