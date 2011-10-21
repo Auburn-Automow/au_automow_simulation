@@ -12,5 +12,5 @@ define field model
   gui_outline 0
   gripper_return 0
   fiducial_return 0
-  laser_return 0
+  ranger_return 0
 )
