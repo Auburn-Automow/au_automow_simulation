@@ -1,0 +1,5 @@
+<launch>
+  <node name="map_polygon" pkg="automow_planning" type="??" output="screen" required="True">
+    <param name="field_csv_file" type="string" value="$(find automow_maps)/maps/practice_field.csv" />
+  </node>
+</launch>
