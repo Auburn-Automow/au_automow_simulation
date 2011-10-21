@@ -3,4 +3,5 @@
   <include file="$(find automow_simulation2d)/launch/competition_field.xml" />
   <!-- <node name="rviz" pkg="rviz" type="rviz"  -->
         <!-- args="-d $(find automow_simulation2d)/rviz/competition_field.vcg" /> -->
+   <include file="$(find automow_simulation2d)/launch/polygon_publisher.xml" />
 </launch>
