@@ -1,6 +1,8 @@
 <launch>
   <node name="stageros" pkg="stage" 
         type="stageros" output="screen" required="True"
-        args="$(find automow_simulation2d)/worlds/competition_field.world"
-  />
+        args="$(find automow_simulation2d)/worlds/competition_field.world">
+        
+    <remap from="base_scan" to="scan" />
+  </node>
 </launch>
