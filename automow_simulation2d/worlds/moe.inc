@@ -16,9 +16,9 @@ define moe position (
   localization_origin [ 0 0 0 0 ]
   
 #  localization "odom"
-  # Odometry Error in x, y, and theta (Normally distributed)
+#  Odometry Error in x, y, and theta (Normally distributed)
 #  odom_error [ 0.1 0.1 0.2 ]
   
   # Add laser to moe
-  #hokuyo_lrf(pose [ 0.94 0.0 0.1 0.0 ])
+  hokuyo_lrf(pose [ 0.75 0.39 -0.65 45.0 ])
 )

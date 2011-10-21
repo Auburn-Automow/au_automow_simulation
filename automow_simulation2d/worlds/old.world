@@ -14,7 +14,7 @@ window (
   
   center [ 0 0 ]
   rotate [ 0 0 ]
-  scale 30.000
+  scale 30.0
   
   show_data 1
   show_flags 0
@@ -25,12 +25,12 @@ field
 ( 
   name "competition_field"
   bitmap "competition_field.jpeg"
-  size [10.000 10.000 0]
-  pose [ 0 0 0 0 ]
+  size [10.0 10.0 0.0]
+  pose [ 0.0 0.0 0 0.0 ]
 )
 
 # Insert the robot and obstacles
-moe ( pose [ 4.500 -5.933 0 97.403 ] )
+moe ( pose [ 0.0 0.0 0.0 0.0 ] )
 
-flower_bed ( pose [ -2.100 -1.233 0 0 ] )
-fence ( pose [ -4.700 3.533 0 176.654 ] )
+flower_bed ( pose [ 3.0 3.0 0.0 0.0 ] )
+fence ( pose [ 6.0 6.0 0.0 0.0 ] )
