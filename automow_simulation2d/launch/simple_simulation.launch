@@ -1,0 +1,8 @@
+<launch>
+  <param name="use_sim_time" value="1" />
+  <include file="$(find automow_simulation2d)/launch/simple_field.xml" />
+  <node name="map_polygon" pkg="automow_planning" type="map_polygon.py" output="screen" required="True">
+    <param name="field_csv_file" value="$(find automow_simulation2d)/worlds/simple_field.csv" />
+    <param name="field_frame_id" value="odom" />
+  </node>
+</launch>
