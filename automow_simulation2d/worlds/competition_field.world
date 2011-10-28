@@ -25,6 +25,9 @@ field
 ( 
   name "competition_field"
   bitmap "competition_field.jpeg"
+  
+  obstacle_return 0
+  
   size [10.000 10.000 0]
   pose [ 0 0 0 0 ]
 )
