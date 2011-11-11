@@ -1,0 +1,14 @@
+<package>
+  <description brief="sim_controller_matlab">
+
+     Package containing simulation scripts, functions, and models for the Automow controller in MATLAB.
+
+  </description>
+  <author>Michael Carroll</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/sim_controller_matlab</url>
+
+</package>
+
+
