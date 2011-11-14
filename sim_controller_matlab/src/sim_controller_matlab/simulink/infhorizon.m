@@ -8,26 +8,25 @@ function [ F, G_phi, G_r ] = infhorizon( v, T, N )
               0, 0];
 
     %Tatsy preallocation
-    F = zeros(2*(N+1),2);
-    G_phi = zeros(2*(N+1),N+1);
-    G_r = zeros(2*(N+1),2*(N+1));
+    F = zeros(2*(N),2);
+    G_phi = zeros(2*(N),N);
+    G_r = zeros(2*(N),2*(N));
 
     % Populate F
-    F(1:2,:) = eye(2);
-    for i = 2:N+1,
-        F(i*2-1:i*2,:) = A^(i-1);
+    for i = 1:2:2*N,
+        F(i:i+1,:) = A^((i+1)/2);
     end
     
     % Populate G_phi
     col = F * B_phi;
-    for i=1:N+1,
-       G_phi(1+2*i:end,i) = col(1:end-2*i); 
+    for i=1:N,
+       G_phi(i*2-1:end,i) = col(1:end-2*(i-1)); 
     end
     
     % Populate G_r
     col = F * B_r;
     for i=1:N;
-        G_r(1+2*i:end,(2*i-1):2*i) = col(1:end-2*i,:);
+        G_r(i*2-1:end,2*i-1:2*i) = col(1:end-2*(i-1),:);
     end
 
 

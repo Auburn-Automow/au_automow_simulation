@@ -4,8 +4,8 @@ clear; clc
 L = 500;
 T = 0.05;
 path_points = [0 , 0;
-               10 , 0;
-               0, 10];
+               5 , 0;
+               0, 5];
 initial_pose = [-3,-3,0.01];
 
 lambda = 0.00001;
@@ -91,6 +91,6 @@ for k = 1:L,
     pose(k+1,2) = pose(k, 2) + T * u(k,1) * sin(pose(k,3) + 0.5 * T * u(k,2));
     pose(k+1,3) = pose(k, 3) + T * u(k,2);
     
-    plot(pose(1:k,1),pose(1:k,2));
+    plot(pose(1:k,1),pose(1:k,2),'r');
     M(:,k) = getframe;
 end
