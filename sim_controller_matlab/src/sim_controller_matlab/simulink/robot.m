@@ -4,12 +4,12 @@ clear; clc
 L = 500;
 T = 0.05;
 path_points = [0 , 0;
-               5 , 0;
+               0, 5;
                0, 5];
-initial_pose = [-3,-3,0.01];
+initial_pose = [-1,-1,0.01];
 
 lambda = 0.00001;
-N = 20;
+N = 50;
 Q = [1,0.02];
 I_q = diag(repmat(Q,1,N));
 v_des = 2;
