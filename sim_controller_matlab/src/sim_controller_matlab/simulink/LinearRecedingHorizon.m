@@ -6,7 +6,7 @@ function [ u, Gamma, Phi ] = LinearRecedingHorizon( R, z, P,q, v_des,T, N, lambd
     L_z = K\G_phi' * I_q * F;
     L_r = K\G_phi' * I_q * (G_r - eye(N*2));
    
-    Phi = -L_z *[sin(2*z(2))/(2*z(2)),0;0,1] * z - L_r * R;
+    Phi = -L_z *[sin(2*z(2))/(z(2)+lambda),0;0,1]* z - L_r * R;
     
     Gamma = ones(N,1);
     for n = 1:N,

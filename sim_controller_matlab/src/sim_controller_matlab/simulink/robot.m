@@ -1,15 +1,14 @@
 clear; clc
 
 %%
-L = 500;
+L = 5000;
 T = 0.05;
-path_points = [0 , 0;
-               0, 5;
-               0, 5];
-initial_pose = [-1,-1,0.01];
+path_points = [ 1.0 , 1.0 ;  1.0 , 5.0 ; 5.0, 5.0; 5.0, 1.0; 1.0, 1.0; 1.0, 5.0];
+initial_pose = [1.01,1,pi/2];
 
-lambda = 0.00001;
-N = 50;
+lambda = 0.0001;
+N = 10;
+
 Q = [1,0.02];
 I_q = diag(repmat(Q,1,N));
 v_des = 2;
@@ -38,7 +37,7 @@ v_max = 1;
 w_min = 2*pi/10;
 w_max = 2*pi/10;
 
-F_w = [1/2,              1/2; 
+F_w = wheel_radius *[1/2,              1/2; 
        1/wheel_base,     -1/wheel_base];
                   
 % Compact form (4.31)
@@ -61,6 +60,8 @@ figure(1); clf;
 nframes = L;
 M = moviein(nframes);
 
+start = true;
+
 for k = 1:L,  
     path_vector = path_points(path_iter+1,:) - path_points(path_iter,:);
     path_vector_n = path_points(path_iter+2,:) - path_points(path_iter+1,:);
@@ -72,25 +73,41 @@ for k = 1:L,
                  norm(path_vector);
     perp = [-path_vector(2),path_vector(1)];
     d = d * sign(dot(pose(k,1:2) - path_points(path_iter,:), perp));
+
     
     theta_hat = wrapToPi(pose(k,3) - phi_1);
 
     z(k,:) = [d; theta_hat];
-    R = repmat([0;phi_1],N,1);
+    if start,
+        Ref = repmat([0;phi_1],N,1);
+    end
     
-    [u(k,:), gamma, phi] = LinearRecedingHorizon(R,z(k,:)',P,q,v_des,T, N, lambda, I_q);
+    [u(k,:), gamma, phi] = LinearRecedingHorizon(Ref,z(k,:)',P,q,v_des,T, N, lambda, I_q);
     
     prpose = drawPlan(pose(k,:),gamma,phi,v_des,T);
     
     figure(1); clf;
-    plot(path_points(1:2,1), path_points(1:2,2)'); hold on;
+    plot(path_points(:,1), path_points(:,2)'); hold on;
     scatter(prpose(:,1),prpose(:,2)); hold on;
-    axis([-5, 10, -5, 5]);
+    axis([-1, 11, -1, 11]);
     
-    pose(k+1,1) = pose(k, 1) + T * u(k,1) * cos(pose(k,3) + 0.5 * T * u(k,2));
-    pose(k+1,2) = pose(k, 2) + T * u(k,1) * sin(pose(k,3) + 0.5 * T * u(k,2));
-    pose(k+1,3) = pose(k, 3) + T * u(k,2);
+    pose(k+1,1) = pose(k, 1) + T * u(k,1) * cos(pose(k,3) + 0.5 * T * -u(k,2));
+    pose(k+1,2) = pose(k, 2) + T * u(k,1) * sin(pose(k,3) + 0.5 * T * -u(k,2));
+    pose(k+1,3) = wrapToPi(pose(k, 3) + T * u(k,2));
     
+    n_hat = nstepIntersect(pose(k,:), gamma, phi, path_points, path_iter, v_des);
+    if n_hat > -1,
+        start = false;
+        iters = length(Ref)/2;
+        if n_hat < iters,
+            Ref(n_hat*2+1:end) = repmat([0;phi_2],iters-n_hat,1);
+        end
+        if n_hat < 2,
+            path_iter = path_iter +1;
+            start = true;
+        end
+    end
+
     plot(pose(1:k,1),pose(1:k,2),'r');
     M(:,k) = getframe;
 end
