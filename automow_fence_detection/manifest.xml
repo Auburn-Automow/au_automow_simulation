@@ -1,0 +1,18 @@
+<package>
+  <description brief="automow_fence_detection">
+
+     automow_fence_detection
+
+  </description>
+  <author>Michael Carroll</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/automow_fence_detection</url>
+
+  <depend package="rosbag"/>
+  <depend package="tf"/>
+  <depend package="sensor_msgs"/>
+
+</package>
+
+
