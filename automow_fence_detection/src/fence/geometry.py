@@ -66,6 +66,4 @@ class Line(object):
 
 	@property
 	def alpha(self):
-		return self._alpha
-
-	@
+		return self._alph
