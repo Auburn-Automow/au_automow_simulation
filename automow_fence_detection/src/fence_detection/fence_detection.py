@@ -16,46 +16,6 @@ import time
 
 bagfile = '/home/mjcarroll/devel/automow/au_automow_simulation/automow_fence_detection/data/fence-scan.bag'
 
-class Scan(object):
-	def __init__(self):
-		self.angle_min = 0
-		self.angle_max = 0
-		self.angle_increment = 0
-		self.ranges = 0
-
-	@classmethod
-	def from_LaserScan(cls, scan_msg):
-		ret = Scan()
-
-		ret.angle_min = scan_msg.angle_min
-		ret.angle_max = scan_msg.angle_max
-		ret.angle_increment = scan_msg.angle_increment
-
-		temp = np.zeros((5,len(scan_msg.ranges)), dtype=np.float32)
-		theta = np.arange(ret.angle_min, ret.angle_max, ret.angle_increment)
-		try:
-			temp[0,:] = theta
-		except:
-			temp[0,:] = np.arange(ret.angle_min, ret.angle_max + ret.angle_increment, ret.angle_increment)
-		temp[1,:] = scan_msg.ranges
-		for ii in range(len(temp[1,:])):
-			if temp[1,ii] <= 1.0:
-				temp[2,ii] = 0.03**2
-			else:
-				temp[2,ii] = (0.03 * temp[1,ii])**2
-		temp[3,:] = temp[1,:] * np.cos(temp[0,:])
-		temp[4,:] = temp[1,:] * np.sin(temp[0,:])
-
-		ret.ranges = temp
-		return ret
-
-	def __len__(self):
-		return self.ranges.shape[1]
-
-	def polar_withvar(self, fig):
-		ax = fig.add_axes([0.1, 0.1, 5, 5], polar=True)
-		ax.scatter(self.ranges[0,:], self.ranges[1,:])
-
 
 def segment_scan(scan, threshold, min_cluster):
     clusters = []
