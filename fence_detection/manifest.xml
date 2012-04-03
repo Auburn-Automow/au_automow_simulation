@@ -1,5 +1,5 @@
 <package>
-  <description brief="automow_fence_detection">
+  <description brief="fence_detection">
 
      automow_fence_detection
 
@@ -12,6 +12,7 @@
   <depend package="rosbag"/>
   <depend package="tf"/>
   <depend package="sensor_msgs"/>
+  <depend package="dynamic_reconfigure"/>
 
 </package>
 

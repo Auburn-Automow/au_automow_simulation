@@ -1,0 +1,11 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~resolution" : \b [double] Meters/pixel of scan image min: 0.0001, default: 0.01, max: 1.0
+- \b "~pixel_res" : \b [int] Width of radius accumulator bin min: 1, default: 5, max: 20
+- \b "~theta_res" : \b [double] Width of theta accumulator bin min: 0.00872664625997, default: 0.0174532925199, max: 1.57079632679
+- \b "~accum_thresh" : \b [int] Accumulator threshold min: 0, default: 40, max: 1000
+- \b "~min_length" : \b [int] Minimum line length (pixels) min: 0, default: 100, max: 1000
+- \b "~gap_length" : \b [int] Maximum bridgable gap (pixels) min: 0, default: 100, max: 1000
+
