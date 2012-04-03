@@ -1,4 +1,4 @@
-import roslib; roslib.load_manifest('automow_fence_detection')
+import roslib; roslib.load_manifest('fence_detection')
 import rospy
 
 import numpy as np
@@ -85,7 +85,7 @@ class Scan(object):
         ret.ranges = temp
         return ret
 
-class HoughDetector:
+class HoughDetector(object):
     def __init__(self, resolution=0.01, pixel_res=5, theta_res=np.pi/180,
                  accum_thresh=40, min_length=100, gap_length=100):
         self.scan = None
@@ -99,7 +99,7 @@ class HoughDetector:
         self.min_length = min_length
         self.gap_length = gap_length
 
-    def add_data_from_msg(self, msg, timestamp):
+    def add_data_from_msg(self, msg, timestamp=None):
         self.scan = Scan.from_LaserScan(msg)
         self.timestamp = timestamp
         self.xy = self.scan.ranges[3:,:]
@@ -108,13 +108,13 @@ class HoughDetector:
         (self.maxx, self.maxy) = np.max(self.xy,1)
 
     def process(self):
-        range_x = np.ceil((self.maxx - self.minx) * (1./self.res)) + 1
-        range_y = np.ceil((self.maxy - self.miny) * (1./self.res)) + 1
+        range_x = np.ceil((self.maxx - self.minx) * (1./self.resolution)) + 1
+        range_y = np.ceil((self.maxy - self.miny) * (1./self.resolution)) + 1
         
         np_src = np.zeros((range_x, range_y), dtype=np.uint8)
         for el in self.xy.T:
-            el_x = np.ceil((el[0] - self.minx) * (1./self.res))
-            el_y = np.ceil((el[1] - self.miny) * (1./self.res))
+            el_x = np.ceil((el[0] - self.minx) * (1./self.resolution))
+            el_y = np.ceil((el[1] - self.miny) * (1./self.resolution))
             np_src[el_x,el_y] = 255
             
         src = cv.fromarray(np_src)
@@ -132,9 +132,9 @@ class HoughDetector:
     def get_lines_meters(self):
         lines = []
         for (pt1, pt2) in self.lines:
-            x1 = (pt1[0] * self.res) + self.miny
-            y1 = (pt1[1] * self.res) + self.minx
-            x2 = (pt2[0] * self.res) + self.miny
-            y2 = (pt2[1] * self.res) + self.minx
+            x1 = (pt1[0] * self.resolution) + self.miny
+            y1 = (pt1[1] * self.resolution) + self.minx
+            x2 = (pt2[0] * self.resolution) + self.miny
+            y2 = (pt2[1] * self.resolution) + self.minx
             lines.append(((x1, y1), (x2, y2)))
         return lines
