@@ -1,4 +1,4 @@
-import roslib; roslib.load_manifest('automow_fence_detection')
+import roslib; roslib.load_manifest('fence_detection')
 
 import rospy
 import rosbag
@@ -14,4 +14,4 @@ class BagFileHelper(object):
 			bag_gen.next()
 		(topic, msg, timestamp) = bag_gen.next()
 		bag.close()
-		return (topic, msg, timestamp)	
+		return (topic, msg, timestamp)

@@ -1,8 +1,8 @@
-import roslib; roslib.load_manifest('automow_fence_detection')
+import roslib; roslib.load_manifest('fence_detection')
 
 import rospy
 
-import fence_detection.geometry as geometry 
+import fence_detection.geometry as geometry
 
 import numpy as np
 
@@ -28,8 +28,8 @@ if __name__ == '__main__':
     bagfile = '/Users/mjcarroll/devel/automow/au_automow_simulation/automow_fence_detection/data/fence-scan.bag'
     bag = BagFileHelper(bagfile)
     (topic, msg, timestamp) = bag.read(200, ['/scan'])
-    
+
     scan = geometry.Scan.from_LaserScan(msg)
-    
+
     laser_errorbar(scan, 4)
     show()

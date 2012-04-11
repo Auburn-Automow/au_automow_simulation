@@ -1,0 +1,5 @@
+build
+cfg/cpp
+src/fence_detection/cfg
+*.cfgc
+*.dox
