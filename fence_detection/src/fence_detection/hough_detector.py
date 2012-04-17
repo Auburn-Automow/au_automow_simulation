@@ -5,6 +5,10 @@ import rospy
 import numpy as np
 import cv2.cv as cv
 
+from scipy.cluster.vq import kmeans2
+
+import planar.line
+
 # ROS Message Imports
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker
@@ -157,12 +161,51 @@ class HoughDetector(object):
             lines.append(((x1, y1), (x2, y2)))
         return lines
 
-    def get_visualization_markers(self, type='lines'):
+    def get_fence_position(self):
+        lineobjs = [planar.line.LineSegment.from_points(l) for l in self.get_lines_meters()]
+        normals = np.zeros(len(lineobjs, 2))
+
+        for i, l in enumerate(lineobjs):
+            normals[i, :] = l.normal
+
+        (means, index) = kmeans2(normals, 2)
+        front = []
+        side = []
+        for i in index:
+            if i == l:
+                front.append(lineobjs[i])
+            else:
+                side.append(lineobjs[i])
+        front_vec = front.pop()
+        side_vec = side.pop()
+
+        for l in front:
+            if l.distance_to((0, 0)) < front_vec.distance_to((0, 0)):
+                front_vec = l
+        for l in side:
+            if l.distance_to((0, 0)) < side_vec.distance_to((0, 0)):
+                side_vec = l
+
+        (x, y) = self.intersection(front_vec, side_vec)
+        return (x, y, 0)
+
+    def intersection(self, line1, line2):
+        (x1, y1), (x2, y2) = line1.points
+        (x3, y3), (x4, y4) = line2.points
+
+        den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+        P_x = ((x1 * y2 - y1 * x2) * (x3 - x4) -
+            (x1 - x2) * (x3 * y4 - y3 * x4)) / den
+        P_y = ((x1 * y2 - y1 * x2) * (y3 - y4) -
+            (y1 - y2) * (x3 * y4 - y3 * x4)) / den
+        return (P_x, P_y)
+
+    def get_visualization_markers(self, type='hough_lines'):
         """
         Returns a visualization_msgs.Marker Message
         with the lines from the Hough Transform in the frame of the scanner.
         """
-        if type == 'lines':
+        if type == 'hough_lines':
             marker = Marker()
             marker.header.frame_id = self.scan.frame_id
             marker.header.stamp = self.scan.timestamp

@@ -3,6 +3,7 @@
 import roslib
 roslib.load_manifest('fence_detection')
 import rospy
+import tf
 
 from sensor_msgs.msg import LaserScan
 from fence_detection.hough_detector import HoughDetector
@@ -20,6 +21,7 @@ class HoughNode(object):
         self.srv = Server(HoughFenceConfig, self.config_callback)
         self.laser_sub = rospy.Subscriber("scan", LaserScan, self.laser_cb)
         self.marker_pub = rospy.Publisher("visualiztion_marker", Marker)
+        self.tf_br = tf.TransformBroadcaster()
 
     def config_callback(self, config, level):
         self.hough.resolution = config['resolution']
@@ -35,6 +37,14 @@ class HoughNode(object):
         self.hough.process()
         marker = self.hough.get_visualization_markers()
         self.marker_pub.publish(marker)
+
+        (x, y, theta) = self.hough.get_fence_position()
+
+        self.tf_br.sendTransform((x, y, 0),
+            tf.transformations.quaternion_from_euler(0, 0, theta),
+            rospy.Time.now(),
+            "hough_fence",
+            msg.header.frame_id)
 
 if __name__ == '__main__':
     rospy.init_node('HoughFence', anonymous=True)
