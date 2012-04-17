@@ -1,65 +1,43 @@
 #!/usr/bin/env python
 
-import roslib; roslib.load_manifest('fence_detection')
+import roslib
+roslib.load_manifest('fence_detection')
 import rospy
 
 from sensor_msgs.msg import LaserScan
-
 from fence_detection.hough_detector import HoughDetector
-
 from dynamic_reconfigure.server import Server
 from fence_detection.cfg import HoughFenceConfig
-from geometry_msgs.msg import Point
 
 from visualization_msgs.msg import Marker
 
+
 class HoughNode(object):
-	def __init__(self):
-		self.hough = HoughDetector()
-		self.hough.resolution = 0.01
+    def __init__(self):
+        self.hough = HoughDetector()
+        self.hough.resolution = 0.01
 
-		self.srv = Server(HoughFenceConfig, self.config_callback)
-		self.laser_sub = rospy.Subscriber("scan", LaserScan, self.laser_cb)
-		self.marker_pub = rospy.Publisher("visualiztion_marker",Marker)
+        self.srv = Server(HoughFenceConfig, self.config_callback)
+        self.laser_sub = rospy.Subscriber("scan", LaserScan, self.laser_cb)
+        self.marker_pub = rospy.Publisher("visualiztion_marker", Marker)
 
-	def config_callback(self, config, level):
-		self.hough.resolution = config['resolution']
-		self.hough.pixel_res = config['pixel_res']
-		self.hough.theta_res = config['theta_res']
-		self.hough.accum_thresh = config['accum_thresh']
-		self.hough.min_length = config['min_length']
-		self.hough.gap_length = config['gap_length']
-		return config
+    def config_callback(self, config, level):
+        self.hough.resolution = config['resolution']
+        self.hough.pixel_res = config['pixel_res']
+        self.hough.theta_res = config['theta_res']
+        self.hough.accum_thresh = config['accum_thresh']
+        self.hough.min_length = config['min_length']
+        self.hough.gap_length = config['gap_length']
+        return config
 
-	def laser_cb(self, msg):
-		self.hough.add_data_from_msg(msg)
-		self.hough.process()
-		lines = self.hough.get_lines_meters()
-
-		marker = Marker()
-		marker.header.frame_id="/laser"
-		marker.header.stamp = rospy.Time.now()
-		marker.ns = "hough_lines"
-		marker.id = 0
-		marker.scale.x = 0.01
-		marker.scale.y = 0.01
-		marker.scale.z = 0.01
-		marker.type = marker.LINE_LIST
-		marker.action = marker.ADD
-		marker.lifetime = rospy.Duration()
-		marker.points = []
-		for (pt1, pt2) in lines:
-			marker.points.append(Point(pt1[1], pt1[0], 0))
-			marker.points.append(Point(pt2[1], pt2[0], 0))
-		marker.color.r = 0.0
-		marker.color.g = 1.0
-		marker.color.b = 0.0
-		marker.color.a = 1.0
-
-		self.marker_pub.publish(marker)
+    def laser_cb(self, msg):
+        self.hough.add_data_from_msg(msg)
+        self.hough.process()
+        marker = self.hough.get_visualization_markers()
+        self.marker_pub.publish(marker)
 
 if __name__ == '__main__':
-	rospy.init_node('HoughFence', anonymous=True)
+    rospy.init_node('HoughFence', anonymous=True)
 
-	hn = HoughNode()
-	rospy.spin()
+    hn = HoughNode()
+    rospy.spin()
